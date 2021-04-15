@@ -6,6 +6,7 @@ import HTTP, SHA, JSON, Dates, Printf
 BINANCE_API_REST = "https://api.binance.com/"
 BINANCE_API_TICKER = string(BINANCE_API_REST, "api/v3/ticker/")
 BINANCE_API_DEPTH = string(BINANCE_API_REST, "api/v3/depth")
+BINANCE_API_INFO = string(BINANCE_API_REST, "/api/v3/exchangeInfo")
 
 BINANCE_API_KLINES = string(BINANCE_API_REST, "api/v3/klines")
 BINANCE_API_USER_DATA_STREAM = string(BINANCE_API_REST, "api/v3/userDataStream")
@@ -68,13 +69,13 @@ end
 
 # Simple test if binance API is online
 function ping()
-    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v1/ping"))
+    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v3/ping"))
     r.status
 end
 
 # Binance servertime
 function serverTime()
-    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v1/time"))
+    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v3/time"))
     r.status
     result = r2j(r.body)
 
@@ -107,18 +108,8 @@ function getAllBookTickers()
 end
 
 function getExchangeInfo()
-    r = HTTP.request("GET", "https://www.binance.com/api/v1/exchangeInfo")
+    r = HTTP.request("GET", string(BINANCE_API_TICKER, "allBookTickers")
     r2j(r.body)
-end
-
-function getMarket()
-    r = HTTP.request("GET", "https://www.binance.com/exchange/public/product")
-    r2j(r.body)["data"]
-end
-
-function getMarket(symbol::String)
-    r = HTTP.request("GET", string("https://www.binance.com/exchange/public/product?symbol=", symbol))
-    r2j(r.body)["data"]
 end
 
 # binance get candlesticks/klines data
