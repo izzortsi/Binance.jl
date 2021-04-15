@@ -4,11 +4,11 @@ import HTTP, SHA, JSON, Dates, Printf
 
 # base URL of the Binance API
 BINANCE_API_REST = "https://api.binance.com/"
-BINANCE_API_TICKER = string(BINANCE_API_REST, "api/v1/ticker/")
-BINANCE_API_DEPTH = string(BINANCE_API_REST, "api/v1/depth")
+BINANCE_API_TICKER = string(BINANCE_API_REST, "api/v3/ticker/")
+BINANCE_API_DEPTH = string(BINANCE_API_REST, "api/v3/depth")
 
-BINANCE_API_KLINES = string(BINANCE_API_REST, "api/v1/klines")
-BINANCE_API_USER_DATA_STREAM = string(BINANCE_API_REST, "api/v1/userDataStream")
+BINANCE_API_KLINES = string(BINANCE_API_REST, "api/v3/klines")
+BINANCE_API_USER_DATA_STREAM = string(BINANCE_API_REST, "api/v3/userDataStream")
 
 
 BINANCE_API_WS = "wss://stream.binance.com:9443/ws/"
