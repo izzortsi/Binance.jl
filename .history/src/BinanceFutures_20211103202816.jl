@@ -6,7 +6,7 @@ import HTTP, SHA, JSON, Dates, Printf
 BINANCE_API_REST = "https://fapi.binance.com/"
 BINANCE_API_TICKER = string(BINANCE_API_REST, "fapi/v1/ticker/")
 BINANCE_API_DEPTH = string(BINANCE_API_REST, "fapi/v1/depth")
-BINANCE_API_INFO = string(BINANCE_API_REST, "fapi/v1/exchangeInfo")
+BINANCE_API_INFO = string(BINANCE_API_REST, "/fapi/v1/exchangeInfo")
 
 BINANCE_API_KLINES = string(BINANCE_API_REST, "fapi/v1/klines")
 BINANCE_API_USER_DATA_STREAM = string(BINANCE_API_REST, "fapi/v1/userDataStream")
@@ -109,11 +109,6 @@ end
 
 function getExchangeInfo()
     r = HTTP.request("GET", string(BINANCE_API_TICKER, "allBookTickers"))
-    r2j(r.body)
-end
-
-function getRestEndpoint(endpoint::String)
-    r = HTTP.request("GET", string(BINANCE_API_REST, "/fapi/v1/", endpoint))
     r2j(r.body)
 end
 
