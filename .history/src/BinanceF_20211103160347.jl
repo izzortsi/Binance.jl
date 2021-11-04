@@ -1,16 +1,15 @@
 module Binance
-include("BinanceFutures.jl")
 
 import HTTP, SHA, JSON, Dates, Printf
-export Futures
-# base URL of the Binance API
-BINANCE_API_REST = "https://api.binance.com/"
-BINANCE_API_TICKER = string(BINANCE_API_REST, "api/v3/ticker/")
-BINANCE_API_DEPTH = string(BINANCE_API_REST, "api/v3/depth")
-BINANCE_API_INFO = string(BINANCE_API_REST, "/api/v3/exchangeInfo")
 
-BINANCE_API_KLINES = string(BINANCE_API_REST, "api/v3/klines")
-BINANCE_API_USER_DATA_STREAM = string(BINANCE_API_REST, "api/v3/userDataStream")
+# base URL of the Binance API
+BINANCE_API_REST = "https://fapi.binance.com/"
+BINANCE_API_TICKER = string(BINANCE_API_REST, "fapi/v1/ticker/")
+BINANCE_API_DEPTH = string(BINANCE_API_REST, "fapi/v1/depth")
+BINANCE_API_INFO = string(BINANCE_API_REST, "/fapi/v1/exchangeInfo")
+
+BINANCE_API_KLINES = string(BINANCE_API_REST, "fapi/v1/klines")
+BINANCE_API_USER_DATA_STREAM = string(BINANCE_API_REST, "fapi/v1/userDataStream")
 
 
 BINANCE_API_WS = "wss://stream.binance.com:9443/ws/"
@@ -70,13 +69,13 @@ end
 
 # Simple test if binance API is online
 function ping()
-    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v3/ping"))
+    r = HTTP.request("GET", string(BINANCE_API_REST, "fapi/v1/ping"))
     r.status
 end
 
 # Binance servertime
 function serverTime()
-    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v3/time"))
+    r = HTTP.request("GET", string(BINANCE_API_REST, "fapi/v1/time"))
     r.status
     result = r2j(r.body)
 
@@ -129,13 +128,13 @@ end
 ##################### SECURED CALL's NEEDS apiKey / apiSecret #####################
 function openOrders()
     query = string("recvWindow=5000&timestamp=", timestamp()) 
-    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v3/openOrders?", query, "&signature=", doSign(query)), headers)
+    r = HTTP.request("GET", string(BINANCE_API_REST, "fapi/v1/openOrders?", query, "&signature=", doSign(query)), headers)
     r2j(r.body)
 end
 
 function cancelOrder(symbol,origClientOrderId)
     query = string("recvWindow=5000&timestamp=", timestamp(),"&symbol=", symbol,"&origClientOrderId=", origClientOrderId)
-    r = HTTP.request("DELETE", string(BINANCE_API_REST, "api/v3/order?", query, "&signature=", doSign(query)), headers)
+    r = HTTP.request("DELETE", string(BINANCE_API_REST, "fapi/v1/order?", query, "&signature=", doSign(query)), headers)
     r2j(r.body)
 end
 
@@ -204,7 +203,7 @@ function account(apiKey::String, apiSecret::String)
 
     query = string("recvWindow=5000&timestamp=", timestamp())
 
-    r = HTTP.request("GET", string(BINANCE_API_REST, "api/v3/account?", query, "&signature=", doSign(query, apiSecret)), headers)
+    r = HTTP.request("GET", string(BINANCE_API_REST, "fapi/v1/account?", query, "&signature=", doSign(query, apiSecret)), headers)
 
     if r.status != 200
         println(r)
@@ -220,9 +219,9 @@ function executeOrder(order::Dict, apiKey, apiSecret; execute=false)
     body = string(query, "&signature=", doSign(query, apiSecret))
     println(body)
 
-    uri = "api/v3/order/test"
+    uri = "fapi/v1/order/test"
     if execute
-        uri = "api/v3/order"
+        uri = "fapi/v1/order"
     end
 
     r = HTTP.request("POST", string(BINANCE_API_REST, uri), headers, body)

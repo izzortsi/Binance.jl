@@ -1,8 +1,7 @@
 module Binance
-include("BinanceFutures.jl")
 
 import HTTP, SHA, JSON, Dates, Printf
-export Futures
+
 # base URL of the Binance API
 BINANCE_API_REST = "https://api.binance.com/"
 BINANCE_API_TICKER = string(BINANCE_API_REST, "api/v3/ticker/")
@@ -109,7 +108,7 @@ function getAllBookTickers()
 end
 
 function getExchangeInfo()
-    r = HTTP.request("GET", string(BINANCE_API_TICKER, "allBookTickers"))
+    r = HTTP.request("GET", string(BINANCE_API_TICKER, "allBookTickers")
     r2j(r.body)
 end
 
